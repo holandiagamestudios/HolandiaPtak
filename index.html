@@ -1,0 +1,88 @@
+<html>
+	<head>
+		<title>Ptak Holendra</title>
+		<style>
+			body{
+				background-color: rgb(39, 39, 39);
+				color:rgb(255, 159, 224);
+				font-family: "Consolas";
+			}
+			#score{
+				font-size: 30px;
+			}
+		</style>
+	</head>
+	<body onload="main();">
+		<center>
+			<canvas id="game" width="500px" height="400px"></canvas>
+			<br>
+			<button id="up" onclick="py=py-25;">Up</button>
+			<button id="pause" onclick="pause=!pause;">Pause / Play</button>
+		</center>
+		<script>
+			var game = document.getElementById('game');
+			var ctx = game.getContext('2d');
+			var py = 100;
+			var cx = 500;
+			var scr = 0;
+			var updown = false;
+			var r = Math.floor(Math.random()*40);
+			var imgData;
+			var pause = false;
+			function draw(){
+					ctx.fillStyle = "#20f0ff";
+					ctx.fillRect(0, 0, 500, 400);
+					
+					ctx.fillStyle = "#00aa00";
+					if(updown){
+						ctx.fillRect(cx, 200-r, 50, 200+r);
+						ctx.fillRect(cx-10, 200-r, 70, 20);
+						
+					} else {
+						ctx.fillRect(cx, 0, 50, 160+r);
+						ctx.fillRect(cx-10, 160+r, 70, 20);
+						if(r%2==0){
+							ctx.fillRect(cx, 320-r, 50, 80+r);
+							ctx.fillRect(cx-10, 320-r, 70, 20);
+						}
+					}
+
+					imgData = ctx.getImageData(50,py,30,15);
+					ctx.fillStyle = "#ff0000";
+					ctx.fillRect(40, py+5, 30, 5);
+					ctx.fillStyle = "#ffffff";
+					ctx.fillRect(40, py, 30, 5);
+					ctx.fillStyle = "#0000ff";
+					ctx.fillRect(40, py-5, 30, 5);
+					ctx.font = "22px Consolas";
+					ctx.fillStyle = "#222222";
+					ctx.fillText(scr.toString(), 440, 35);
+			}
+			function main(){
+				setInterval(()=>{
+					if(!pause){
+						scr = scr + 1;
+						if(cx<-70){
+							cx=560;
+							r = Math.floor(Math.random()*60);
+							updown = Math.round(Math.random());
+						}
+						draw();
+						py=py+5;
+						cx = cx - 9;
+						if(py>400 || py < 0 || (imgData.data[1])==0xaa){
+							draw();
+							ctx.font = "48px Consolas";
+  							ctx.fillText("Game over!", 120, 180);
+							pause = true;
+							py = 100;
+							scr=0;
+							cx = -100;
+							updown = false;
+						}
+					}
+				}, 50);
+			}
+		</script>
+	</body>
+</html>
